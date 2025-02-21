@@ -20,6 +20,8 @@ interface SidePanelProps {
     navigateMove: (direction: 'forward' | 'back') => void;
     startNewGame: (color: 'w' | 'b') => void;
     changeColor: () => void;
+    toggleBoardView: () => void;
+    undoLastManualMove: () => void;
 }
 
 const SidePanel: React.FC<SidePanelProps> = ({
@@ -32,7 +34,10 @@ const SidePanel: React.FC<SidePanelProps> = ({
     navigateMove,
     startNewGame,
     changeColor,
+    toggleBoardView,
+    undoLastManualMove
 }) => {
+
     return (
         <div className="bg-blue-900 p-6 rounded-xl shadow-2xl flex flex-col space-y-6">
             {/* Game Status */}
@@ -88,14 +93,19 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     <RotateCcw className="w-6 h-6" />
                     New Game
                 </button>
+
+            </div>
+
+            {/* New Controls */}
+            <div className="flex flex-col space-y-4 mt-4">
                 <button
-                    onClick={changeColor}
-                    className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-xl shadow transition-colors flex items-center justify-center gap-2"
+                    onClick={toggleBoardView}
+                    className="w-full bg-purple-700 hover:bg-purple-600 text-white font-bold py-3 px-4 rounded-xl shadow transition-colors flex items-center justify-center gap-2"
                 >
-                    <X className="w-6 h-6" />
-                    Change Color
+                    <span>Flip Board</span>
                 </button>
             </div>
+
 
             {/* Move Navigation */}
             <div className="flex justify-between items-center mt-4">
@@ -115,6 +125,21 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     className={`p-2 rounded-full ${currentMoveIndex >= positions.length - 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-700 hover:bg-blue-600'} text-white transition`}
                 >
                     <ChevronRight className="w-6 h-6" />
+                </button>
+            </div>
+
+            <div className='flex flex-row items-center justify-between gap-2'>
+                <button
+                    onClick={changeColor}
+                    className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-xl shadow transition-colors flex items-center justify-center gap-2"
+                >
+                    Change Color
+                </button>
+                <button
+                    onClick={undoLastManualMove}
+                    className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-xl shadow transition-colors flex items-center justify-center gap-2"
+                >
+                    <span>Undo Move</span>
                 </button>
             </div>
         </div>

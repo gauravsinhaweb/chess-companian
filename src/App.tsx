@@ -19,6 +19,7 @@ function App() {
   const [currentMoveIndex, setCurrentMoveIndex] = useState(-1);
   const [gameEndMessage, setGameEndMessage] = useState<string | null>(null);
   const [positions, setPositions] = useState<string[]>([]);
+  const [flipBoard, setFlipBoard] = useState<boolean>(false);
 
   // autoColor: side played automatically by the API.
   // manualColor: the opponent’s side (moves entered manually).
@@ -142,6 +143,27 @@ function App() {
       return false;
     }
   };
+
+  // Toggle board view (flip board)
+  const toggleBoardView = () => {
+    setFlipBoard((prev) => !prev);
+  };
+
+  const undoLastManualMove = () => {
+    if (moveHistory.length > 0 && moveHistory.length % 2 === 0) {
+      // Undo the last move (manual move)
+      game.undo();
+      const newHistory = [...moveHistory];
+      newHistory.pop();
+      setMoveHistory(newHistory);
+      setCurrentPosition(game.fen());
+      setPositions((prev) => prev.slice(0, prev.length - 1));
+      setCurrentMoveIndex((prev) => prev - 1);
+    } else {
+      setErrorMessage("No manual move to undo");
+    }
+  };
+
 
   const makeManualMove = (from: Square, to: Square): boolean => {
     if (!isValidManualMove()) return false;
@@ -267,7 +289,9 @@ function App() {
     }
   };
 
-  const boardOrientation = playerColor === "b" ? "black" : "white";
+  const boardOrientation = flipBoard
+    ? (playerColor === "b" ? "white" : "black")
+    : (playerColor === "b" ? "black" : "white");
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-800 gap-8 flex items-center max-lg:flex-col justify-center p-4 scale-80 origin-top">
@@ -323,6 +347,8 @@ function App() {
             navigateMove={navigateMove}
             startNewGame={startNewGame}
             changeColor={changeColor}
+            toggleBoardView={toggleBoardView}
+            undoLastManualMove={undoLastManualMove}
           />
         </>
       )}
