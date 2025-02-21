@@ -172,40 +172,45 @@ function App() {
   };
 
   const onSquareClick = (square: Square) => {
-    if (!isValidManualMove()) {
-      setSelectedSquare(null);
-      setPossibleMoves([]);
-      return;
+    // Castling assistance: if a rook at its starting square is clicked,
+    // automatically select the king's starting square.
+    const clickedPiece = game.get(square);
+    if (clickedPiece && clickedPiece.type === 'r' && clickedPiece.color === manualColor) {
+      if (
+        (manualColor === 'w' && (square === 'a1' || square === 'h1')) ||
+        (manualColor === 'b' && (square === 'a8' || square === 'h8'))
+      ) {
+        const kingSquare = manualColor === 'w' ? 'e1' : 'e8';
+        setSelectedSquare(kingSquare);
+        setPossibleMoves(getMoveOptions(kingSquare));
+        return; // Exit early to let the user complete castling.
+      }
     }
-    try {
-      if (selectedSquare !== null) {
-        const moveSuccessful = makeManualMove(selectedSquare, square);
-        if (!moveSuccessful) {
-          const piece = game.get(square);
-          if (piece && piece.color === manualColor) {
-            setSelectedSquare(square);
-            setPossibleMoves(getMoveOptions(square));
-            setErrorMessage(null);
-          } else {
-            setSelectedSquare(null);
-            setPossibleMoves([]);
-          }
-        }
-      } else {
+
+    // Normal onSquareClick logic for manual move handling:
+    if (selectedSquare !== null) {
+      const moveSuccessful = makeManualMove(selectedSquare, square);
+      if (!moveSuccessful) {
         const piece = game.get(square);
         if (piece && piece.color === manualColor) {
           setSelectedSquare(square);
           setPossibleMoves(getMoveOptions(square));
           setErrorMessage(null);
+        } else {
+          setSelectedSquare(null);
+          setPossibleMoves([]);
         }
       }
-    } catch (error) {
-      console.error("Square click error:", error);
-      setErrorMessage("Error handling square click");
-      setSelectedSquare(null);
-      setPossibleMoves([]);
+    } else {
+      const piece = game.get(square);
+      if (piece && piece.color === manualColor) {
+        setSelectedSquare(square);
+        setPossibleMoves(getMoveOptions(square));
+        setErrorMessage(null);
+      }
     }
   };
+
 
   const onDrop = (sourceSquare: Square, targetSquare: Square) => {
     return makeManualMove(sourceSquare, targetSquare);
