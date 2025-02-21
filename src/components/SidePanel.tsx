@@ -40,7 +40,6 @@ const SidePanel: React.FC<SidePanelProps> = ({
 
     return (
         <div className="bg-blue-900 p-6 rounded-xl shadow-2xl flex flex-col space-y-6">
-            {/* Game Status */}
             <div>
                 <h2 className="text-2xl font-bold text-white">Game Status</h2>
                 <p className="text-blue-300 mt-2">
@@ -54,7 +53,6 @@ const SidePanel: React.FC<SidePanelProps> = ({
                 <p className="mt-2 font-semibold text-white">{gameStatus}</p>
             </div>
 
-            {/* Engine Status */}
             <div>
                 <h2 className="text-xl font-bold text-white">Chess Engine</h2>
                 <div className="mt-2 bg-green-200 text-green-800 px-3 py-2 rounded-lg flex items-center gap-2">
@@ -63,7 +61,6 @@ const SidePanel: React.FC<SidePanelProps> = ({
                 </div>
             </div>
 
-            {/* Move History */}
             <div>
                 <h2 className="text-xl font-bold text-white mb-2">Move History</h2>
                 <div className="bg-white rounded-lg p-4 h-64 overflow-y-auto text-blue-900">
@@ -84,7 +81,6 @@ const SidePanel: React.FC<SidePanelProps> = ({
                 </div>
             </div>
 
-            {/* Controls */}
             <div className="flex flex-col space-y-4">
                 <button
                     onClick={() => startNewGame(playerColor)}
@@ -96,7 +92,6 @@ const SidePanel: React.FC<SidePanelProps> = ({
 
             </div>
 
-            {/* New Controls */}
             <div className="flex flex-col space-y-4 mt-4">
                 <button
                     onClick={toggleBoardView}
@@ -107,7 +102,6 @@ const SidePanel: React.FC<SidePanelProps> = ({
             </div>
 
 
-            {/* Move Navigation */}
             <div className="flex justify-between items-center mt-4">
                 <button
                     onClick={() => navigateMove('back')}

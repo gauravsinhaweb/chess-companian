@@ -1,4 +1,3 @@
-// src/App.tsx
 import { Chess, Square } from 'chess.js';
 import { Circle } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -21,12 +20,9 @@ function App() {
   const [positions, setPositions] = useState<string[]>([]);
   const [flipBoard, setFlipBoard] = useState<boolean>(false);
 
-  // autoColor: side played automatically by the API.
-  // manualColor: the opponent’s side (moves entered manually).
   const autoColor = playerColor;
   const manualColor = playerColor ? (playerColor === 'w' ? 'b' : 'w') : null;
 
-  // Effect: When it's the auto side's turn, automatically calculate and play a move.
   useEffect(() => {
     const makeAutoMove = async () => {
       if (
@@ -60,7 +56,6 @@ function App() {
     }
   }, [game, moveHistory, autoColor, isAnalyzing]);
 
-  // Function to calculate and play the best move using the online API
   const calculateAndPlayBestMove = async () => {
     if (game.isGameOver()) return;
     setIsAnalyzing(true);
@@ -93,7 +88,6 @@ function App() {
     }
   };
 
-  // --- Manual (Opponent) Move Functions ---
 
   const isValidManualMove = (): boolean => {
     if (!playerColor) {
@@ -144,14 +138,12 @@ function App() {
     }
   };
 
-  // Toggle board view (flip board)
   const toggleBoardView = () => {
     setFlipBoard((prev) => !prev);
   };
 
   const undoLastManualMove = () => {
     if (moveHistory.length > 0 && moveHistory.length % 2 === 0) {
-      // Undo the last move (manual move)
       game.undo();
       const newHistory = [...moveHistory];
       newHistory.pop();
@@ -194,8 +186,6 @@ function App() {
   };
 
   const onSquareClick = (square: Square) => {
-    // Castling assistance: if a rook at its starting square is clicked,
-    // automatically select the king's starting square.
     const clickedPiece = game.get(square);
     if (clickedPiece && clickedPiece.type === 'r' && clickedPiece.color === manualColor) {
       if (
@@ -205,11 +195,10 @@ function App() {
         const kingSquare = manualColor === 'w' ? 'e1' : 'e8';
         setSelectedSquare(kingSquare);
         setPossibleMoves(getMoveOptions(kingSquare));
-        return; // Exit early to let the user complete castling.
+        return; 
       }
     }
 
-    // Normal onSquareClick logic for manual move handling:
     if (selectedSquare !== null) {
       const moveSuccessful = makeManualMove(selectedSquare, square);
       if (!moveSuccessful) {
