@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Square } from 'chess.js';
-import { CopyCheck } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CopyCheck } from 'lucide-react';
 
 interface ChessBoardPanelProps {
     currentPosition: string;
@@ -14,6 +14,10 @@ interface ChessBoardPanelProps {
     lastMove: string | null;
     errorMessage: string | null;
     gameEndMessage: string | null;
+    undoLastManualMove: () => void;
+    navigateMove: (direction: 'forward' | 'back') => void;
+    positions: string[];
+    currentMoveIndex: number;
 }
 
 const ChessBoardPanel: React.FC<ChessBoardPanelProps> = ({
@@ -23,10 +27,12 @@ const ChessBoardPanel: React.FC<ChessBoardPanelProps> = ({
     boardOrientation,
     selectedSquare,
     possibleMoves,
-    isAnalyzing,
-    lastMove,
     errorMessage,
     gameEndMessage,
+    undoLastManualMove,
+    navigateMove,
+    positions,
+    currentMoveIndex
 }) => {
     const [boardWidth, setBoardWidth] = useState(Math.min(Math.max(window.innerWidth * 0.8, 400), 800));
 
@@ -48,6 +54,33 @@ const ChessBoardPanel: React.FC<ChessBoardPanelProps> = ({
     return (
         <div className="lg:col-span-3">
             <div className="relative">
+                <div className='hidden max-md:flex justify-end mb-4'>
+                    <button
+                        onClick={undoLastManualMove}
+                        className="text-sm bg-pink-700 hover:bg-pink-600 text-white font-bold py-2 px-3 rounded-xl shadow transition-colors flex items-center justify-center gap-2"
+                    >
+                        <span>Undo</span>
+                    </button>
+                </div>
+                <div className="hidden max-md:flex justify-between items-center my-4">
+                    <button
+                        onClick={() => navigateMove('back')}
+                        disabled={currentMoveIndex <= 0}
+                        className={`p-2 rounded-full ${currentMoveIndex <= 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-amber-700 hover:bg-amber-600'} text-white transition`}
+                    >
+                        <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <span className="text-white font-semibold">
+                        Move {currentMoveIndex} of {positions.length - 1}
+                    </span>
+                    <button
+                        onClick={() => navigateMove('forward')}
+                        disabled={currentMoveIndex >= positions.length - 1}
+                        className={`p-2 rounded-full ${currentMoveIndex >= positions.length - 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-amber-700 hover:bg-amber-600'} text-white transition`}
+                    >
+                        <ChevronRight className="w-6 h-6" />
+                    </button>
+                </div>
                 <div className="w-full aspect-square max-w-[800px] mx-auto">
                     <Chessboard
                         position={currentPosition}
@@ -80,20 +113,20 @@ const ChessBoardPanel: React.FC<ChessBoardPanelProps> = ({
                     />
                 </div>
 
-                {isAnalyzing && (
+                {/* {isAnalyzing && (
                     <div className="absolute top-4 left-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
                         <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                         <span>Calculating best move...</span>
                     </div>
-                )}
+                )} */}
 
-                {lastMove && (
+                {/* {lastMove && (
                     <div className="absolute top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
                         <span>Auto move: </span>
                         <span className="font-bold">{lastMove}</span>
                         <CopyCheck className="w-5 h-5" />
                     </div>
-                )}
+                )} */}
 
                 {errorMessage && (
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in">

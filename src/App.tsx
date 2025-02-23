@@ -195,7 +195,7 @@ function App() {
         const kingSquare = manualColor === 'w' ? 'e1' : 'e8';
         setSelectedSquare(kingSquare);
         setPossibleMoves(getMoveOptions(kingSquare));
-        return; 
+        return;
       }
     }
 
@@ -311,6 +311,7 @@ function App() {
         </div>
       ) : (
         <>
+
           <ChessBoardPanel
             currentPosition={currentPosition}
             onPieceDrop={onDrop}
@@ -322,6 +323,10 @@ function App() {
             lastMove={lastMove}
             errorMessage={errorMessage}
             gameEndMessage={gameEndMessage}
+            undoLastManualMove={undoLastManualMove}
+            navigateMove={navigateMove}
+            positions={positions}
+            currentMoveIndex={currentMoveIndex}
           />
           <SidePanel
             playerColor={playerColor}

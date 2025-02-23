@@ -39,7 +39,26 @@ const SidePanel: React.FC<SidePanelProps> = ({
 }) => {
 
     return (
-        <div className="bg-blue-900 p-6 rounded-xl shadow-2xl flex flex-col space-y-6">
+        <div className="bg-blue-900 p-6 pt-0 rounded-xl shadow-2xl flex flex-col space-y-6">
+            <div>
+                <h2 className="text-xl font-bold text-white mb-2">Move History</h2>
+                <div className="bg-white rounded-lg p-4 h-64 overflow-y-auto text-blue-900">
+                    <div className="grid grid-cols-3 gap-x-4 gap-y-2 text-sm">
+                        <div className="col-span-3 grid grid-cols-3 gap-x-4 font-bold border-b pb-2">
+                            <div>#</div>
+                            <div>White</div>
+                            <div>Black</div>
+                        </div>
+                        {Array.from({ length: Math.ceil(moveHistory.length / 2) }).map((_, i) => (
+                            <React.Fragment key={i}>
+                                <div className="text-gray-500">{i + 1}.</div>
+                                <div className="font-medium">{moveHistory[i * 2] || ''}</div>
+                                <div className="font-medium">{moveHistory[i * 2 + 1] || ''}</div>
+                            </React.Fragment>
+                        ))}
+                    </div>
+                </div>
+            </div>
             <div>
                 <h2 className="text-2xl font-bold text-white">Game Status</h2>
                 <p className="text-blue-300 mt-2">
@@ -60,27 +79,6 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     <span className="text-sm font-semibold">Stockfish is ready</span>
                 </div>
             </div>
-
-            <div>
-                <h2 className="text-xl font-bold text-white mb-2">Move History</h2>
-                <div className="bg-white rounded-lg p-4 h-64 overflow-y-auto text-blue-900">
-                    <div className="grid grid-cols-3 gap-x-4 gap-y-2 text-sm">
-                        <div className="col-span-3 grid grid-cols-3 gap-x-4 font-bold border-b pb-2">
-                            <div>#</div>
-                            <div>White</div>
-                            <div>Black</div>
-                        </div>
-                        {Array.from({ length: Math.ceil(moveHistory.length / 2) }).map((_, i) => (
-                            <React.Fragment key={i}>
-                                <div className="text-gray-500">{i + 1}.</div>
-                                <div className="font-medium">{moveHistory[i * 2] || ''}</div>
-                                <div className="font-medium">{moveHistory[i * 2 + 1] || ''}</div>
-                            </React.Fragment>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
             <div className="flex flex-col space-y-4">
                 <button
                     onClick={() => startNewGame(playerColor)}
@@ -111,7 +109,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     <ChevronLeft className="w-6 h-6" />
                 </button>
                 <span className="text-white font-semibold">
-                    Move {currentMoveIndex + 1} of {positions.length}
+                    Move {currentMoveIndex} of {positions.length - 1}
                 </span>
                 <button
                     onClick={() => navigateMove('forward')}
